@@ -49,9 +49,11 @@ ChatBot::ChatBot(const ChatBot& other)
 {
     std::cout << "ChatBot Copy Constructor" << std::endl;
 
-    _currentNode = new GraphNode(other._currentNode->GetID());
-    _rootNode = new GraphNode(other._rootNode->GetID());
     _image = new wxBitmap(*other._image);
+    _currentNode = other._currentNode;
+    _rootNode = other._rootNode;
+    _chatLogic = other._chatLogic;
+    _chatLogic->SetChatbotHandle(this);
 }
 
 ChatBot& ChatBot::operator=(const ChatBot& other)
@@ -68,9 +70,11 @@ ChatBot& ChatBot::operator=(const ChatBot& other)
         _rootNode = nullptr;
         _image = NULL;
 
-        _currentNode = new GraphNode(other._currentNode->GetID());
-        _rootNode = new GraphNode(other._rootNode->GetID());
         _image = new wxBitmap(*other._image);
+        _currentNode = other._currentNode;
+        _rootNode = other._rootNode;
+        _chatLogic = other._chatLogic;
+        _chatLogic->SetChatbotHandle(this);
     }
     
     return *this;
@@ -83,9 +87,12 @@ ChatBot::ChatBot(ChatBot&& other)
     _currentNode = other._currentNode;
     _rootNode = other._rootNode;
     _image = other._image;
+    _chatLogic = other._chatLogic;
+    _chatLogic->SetChatbotHandle(this);
 
     other._currentNode = nullptr;
     other._rootNode = nullptr;
+    other._chatLogic = nullptr;
     other._image = NULL;
 }
 
@@ -95,16 +102,18 @@ ChatBot& ChatBot::operator=(ChatBot&& other)
     
     if (&other != this)
     {
-        delete _currentNode;
-        delete _rootNode;
         delete _image;
 
         _currentNode = other._currentNode;
         _rootNode = other._rootNode;
         _image = other._image;
 
+        _chatLogic = other._chatLogic;
+        _chatLogic->SetChatbotHandle(this);
+
         other._currentNode = nullptr;
         other._rootNode = nullptr;
+        other._chatLogic = nullptr;
         other._image = NULL;
     }
 
